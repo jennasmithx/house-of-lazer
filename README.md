@@ -1,63 +1,90 @@
 # House of Lazer
 
-Website for House of Lazer: laser tattoo removal, microneedling and skin treatments, with an online shop that takes payment through PayFast (collect in store or delivery).
+Website for House of Lazer: laser tattoo removal, microneedling and skin treatments, with an online shop, customer accounts, and PayFast checkout (collect in store or delivery).
+
+It uses the same setup as PetPaw Haven (Vercel + Supabase + PayFast + Resend), with customer login done the MineCentral way (Supabase Auth).
 
 ## Pages
 
 | Page | Path |
 | --- | --- |
-| Home | `/` |
-| About | `/about` |
-| Services & pricing | `/services` |
-| Shop | `/shop` |
-| Gallery | `/gallery` |
-| Contact & bookings | `/contact` |
+| Home, About, Services, Shop, Gallery, Contact | `/`, `/about`, `/services`, `/shop`, `/gallery`, `/contact` |
 | Cart & checkout | `/cart` |
+| Sign in, create account, my orders & details | `/account` |
+| Forgot / reset password | `/forgot-password`, `/reset-password` |
 
-## Running locally
+## Project layout
 
-Requires Node.js 18 or later.
+```
+public/          Static site (HTML, CSS, browser JS)
+api/             Vercel serverless functions, one per endpoint
+lib/             Shared server code (PayFast, Supabase, email, pricing)
+data/            Product and service catalogue (the price source of truth)
+schema.sql       Supabase tables, sign-up trigger and security rules
+dev-server.js    Runs the site + api/ locally, the way Vercel does
+```
+
+## Setup
+
+### 1. Supabase
+
+1. Create a project at [supabase.com](https://supabase.com).
+2. Open **SQL Editor**, paste the contents of `schema.sql`, and click **Run**.
+3. Under **Authentication > URL Configuration**, set **Site URL** to the live site address, and add these **Redirect URLs** (plus the same for `http://localhost:3000` while testing):
+   - `https://YOUR-SITE/account`
+   - `https://YOUR-SITE/reset-password`
+4. Under **Project Settings > API**, copy the Project URL, the publishable (anon) key and the service role key into your environment variables (see below).
+5. To make the owner an admin (for the admin page, coming next): after she signs up on the site, open **Table Editor > profiles** and tick `is_admin` on her row.
+
+### 2. Environment variables
+
+Copy `.env.example` to `.env` for local development. On Vercel, add the same variables under **Project > Settings > Environment Variables**. The file explains each one.
+
+**The service role key is secret.** It only belongs in `.env` and Vercel settings, never in `public/`.
+
+### 3. Run locally
 
 ```bash
 npm install
-cp .env.example .env   # optional, defaults work for the PayFast sandbox
-npm start              # http://localhost:3000
+npm run dev     # http://localhost:3000
 npm test
 ```
 
+### 4. Deploy
+
+Import the repo into [Vercel](https://vercel.com). There's no build step: Vercel serves `public/` and turns each file in `api/` into a function. Add the environment variables and deploy.
+
 ## How checkout works
 
-1. The cart lives in the browser. At checkout the browser sends only product IDs and quantities to `POST /api/checkout`.
-2. The server prices the order from `data/products.json`, adds the delivery fee if delivery is chosen, saves a **pending** order, and returns the PayFast form fields. Prices in the browser are never trusted.
+1. The cart lives in the browser. At checkout the browser sends only product IDs and quantities to `/api/checkout`, plus the customer's login token if they're signed in.
+2. The server prices the order from `data/products.json`, adds the delivery fee if needed, and saves a **pending** order in Supabase, linked to the customer's account if they're signed in. It then returns the PayFast form fields.
 3. The browser posts that form to PayFast, where the customer pays.
-4. PayFast sends a payment notification (ITN) to `/api/payfast/notify`. The server checks the amount and confirms the notification with PayFast. When a passphrase is configured it also verifies the signature. Only then is the order marked **paid**.
+4. PayFast notifies `/api/payfast-notify`. The server checks the merchant ID, the signature (on the raw body, as PetPaw Haven does), PayFast's own validation endpoint and the amount. Only then is the order marked **paid**, and the confirmation emails go out once.
 5. The customer returns to `/checkout-success`, which shows the payment status.
 
-Orders are saved in `data/orders.json` and contact messages in `data/messages.json`. Both files are git-ignored. This is fine for testing, but move to a real database before going live.
+Guests can always check out without an account. Signed-in customers get their saved details filled in, and their orders appear under **My account**.
 
 ### PayFast sandbox
 
-The defaults use PayFast's shared sandbox merchant (`10000100`), so checkout works out of the box with no real money. That shared account's passphrase isn't public, so requests to it are sent unsigned.
+The defaults use PayFast's shared sandbox merchant (`10000100`). That account's passphrase isn't public, so requests to it are sent unsigned, and notifications are verified through PayFast's validation endpoint only.
 
-For proper testing, create your own free account at <https://sandbox.payfast.co.za>, set a passphrase under **Settings**, and put your merchant ID, key and passphrase in `.env`. Every request and notification is then signed and verified.
-
-**Payment notifications need a public URL.** PayFast can't reach `localhost`, so orders stay "pending" locally. To test the full flow, expose the server with a tunnel such as `ngrok http 3000` and set `BASE_URL` to the tunnel URL.
+For proper testing, create your own sandbox account at <https://sandbox.payfast.co.za>, set a passphrase, and put your merchant ID, key and passphrase in the environment variables. Full signing then switches on. Payment notifications need a public URL, so test the full flow on a Vercel preview deployment (or use ngrok locally).
 
 ### Going live
 
-1. Set `PAYFAST_SANDBOX=false` and use your live merchant ID, key and passphrase. The server refuses to start in live mode without a passphrase.
-2. Set `BASE_URL` to the real https domain.
-3. Replace the JSON-file store with a database and add a way for the business to view orders, for example an admin page or email notifications.
+1. Set `PAYFAST_SANDBOX=false` with the live merchant ID, key and passphrase. A passphrase is required in live mode.
+2. Set `SITE_URL` to the real domain.
+3. Set up Resend with a verified domain so emails send (`RESEND_API_KEY`, `EMAIL_FROM`, `STORE_EMAIL`).
+4. Customise Supabase's sign-up and password reset emails under **Authentication > Emails** so they're branded House of Lazer.
 
 ## Customising content
 
-- **Products:** `data/products.json`. Add an `"image": "/images/products/name.jpg"` field to show a photo instead of initials.
+- **Products:** `data/products.json`. Add `"image": "/images/products/name.jpg"` to show a photo.
 - **Services & prices:** `data/services.json`
-- **Gallery photos:** put images in `public/images/gallery/` and list them at the top of `public/js/gallery.js`.
+- **Gallery photos:** put them in `public/images/gallery/` and list them at the top of `public/js/gallery.js`.
 - **Contact details, social links:** `SITE` at the top of `public/js/site.js`
-- **About page text** (founder name, experience stats): `public/about.html`
+- **About page** (founder name, stats): `public/about.html`
 - **Opening hours:** `public/contact.html`
-- **Delivery fee:** `DELIVERY_FEE` in `.env` (default R95)
 - **Colours & fonts:** CSS variables at the top of `public/css/styles.css`
 
-All prices, contact details and About page text are placeholders. Replace them with the real details before launch.
+All prices, contact details and About page text are placeholders. Replace them before launch.

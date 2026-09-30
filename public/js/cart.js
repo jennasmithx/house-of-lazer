@@ -1,8 +1,9 @@
 (async () => {
   const root = document.getElementById('cart-root');
-  let products, config;
+  let products, config, profile, session;
   try {
-    [products, config] = await Promise.all([getJson('/api/products'), getJson('/api/shop-config')]);
+    [products, config, session] = await Promise.all([getJson('/api/products'), getJson('/api/shop-config'), Auth.session()]);
+    profile = session ? await Auth.profile() : null;
   } catch {
     root.innerHTML = '<div class="alert alert--error">Sorry, the shop could not be loaded. Please refresh the page.</div>';
     return;
@@ -52,6 +53,9 @@
           </div>
 
           <h3>Your details</h3>
+          ${session
+            ? `<p class="muted" style="margin:0">Signed in as <strong>${escapeHtml(session.user.email)}</strong>. This order will appear in <a href="/account">your account</a>.</p>`
+            : `<div class="alert alert--info" style="margin:0">Have an account? <a href="/account?next=/cart">Sign in</a> for faster checkout, or continue as a guest.</div>`}
           <div class="form-row">
             <div><label for="firstName">First name</label><input id="firstName" name="firstName" autocomplete="given-name" required></div>
             <div><label for="lastName">Last name</label><input id="lastName" name="lastName" autocomplete="family-name" required></div>
@@ -71,6 +75,7 @@
             </div>
           </div>
 
+          ${session ? `<label class="checkbox"><input type="checkbox" name="saveDetails" checked> Save these details to my account</label>` : ''}
           <div id="summary-totals"></div>
           <div class="alert alert--error" id="checkout-error" hidden></div>
           <button class="btn btn--primary btn--block" type="submit" id="pay-btn">Pay securely with PayFast</button>
@@ -81,6 +86,26 @@
     renderLines();
     renderTotals();
     bindForm();
+    prefill();
+  }
+
+  // Fill checkout from the signed-in customer's saved details.
+  function prefill() {
+    if (!session) return;
+    const el = document.getElementById('checkout-form');
+    const values = {
+      firstName: profile?.first_name,
+      lastName: profile?.last_name,
+      email: session.user.email,
+      phone: profile?.phone,
+      street: profile?.street,
+      suburb: profile?.suburb,
+      city: profile?.city,
+      postalCode: profile?.postal_code,
+    };
+    for (const [name, value] of Object.entries(values)) {
+      if (value && el.elements[name] && !el.elements[name].value) el.elements[name].value = value;
+    }
   }
 
   function renderLines() {
@@ -163,13 +188,27 @@
     btn.disabled = true;
     btn.textContent = 'Redirecting to PayFast…';
     try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
+      // Signed-in customers send their access token so the order is linked to their account.
+      const current = await Auth.session();
+      const headers = { 'Content-Type': 'application/json' };
+      if (current) headers.Authorization = `Bearer ${current.access_token}`;
+      const res = await fetch('/api/checkout', { method: 'POST', headers, body: JSON.stringify(payload) });
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || 'Checkout failed. Please try again.');
+
+      if (current && f.get('saveDetails')) {
+        const c = payload.customer;
+        const changes = { first_name: c.firstName, last_name: c.lastName, phone: c.phone || null };
+        if (payload.address) {
+          Object.assign(changes, {
+            street: payload.address.street,
+            suburb: payload.address.suburb || null,
+            city: payload.address.city,
+            postal_code: payload.address.postalCode,
+          });
+        }
+        await Auth.updateProfile(changes).catch(() => { /* not worth blocking payment */ });
+      }
 
       // PayFast expects a normal form POST, in the exact field order signed by the server.
       const pf = document.createElement('form');

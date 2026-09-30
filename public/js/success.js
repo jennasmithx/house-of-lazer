@@ -12,7 +12,7 @@
   // PayFast's notification can land a few seconds after the redirect, so poll briefly.
   for (let attempt = 0; attempt < 6; attempt++) {
     try {
-      const order = await getJson(`/api/orders/${encodeURIComponent(orderId)}/status`);
+      const order = await getJson(`/api/order-status?id=${encodeURIComponent(orderId)}`);
       const how = order.fulfilment === 'delivery'
         ? "We'll email you when it's on its way."
         : "We'll let you know when it's ready to collect.";

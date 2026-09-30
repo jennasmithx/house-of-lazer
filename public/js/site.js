@@ -27,6 +27,7 @@ const ICONS = {
   spark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/></svg>',
   check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>',
   lock: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+  user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
   x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
 };
 
@@ -152,7 +153,8 @@ function renderHeader() {
       </ul>
       <div class="nav-actions">
         <a class="btn btn--primary btn--sm nav-book" href="/contact">Book now</a>
-        <a class="cart-link" href="/cart" aria-label="Cart">${ICONS.bag}<span class="cart-count" hidden></span></a>
+        <a class="icon-link account-link" href="/account" aria-label="${signedIn() ? 'My account' : 'Sign in'}" title="${signedIn() ? 'My account' : 'Sign in'}">${ICONS.user}${signedIn() ? '<span class="signed-in-dot"></span>' : ''}</a>
+        <a class="icon-link cart-link" href="/cart" aria-label="Cart">${ICONS.bag}<span class="cart-count" hidden></span></a>
         <button class="menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">${ICONS.menu}</button>
       </div>
     </nav>`;
@@ -163,6 +165,16 @@ function renderHeader() {
     toggle.setAttribute('aria-expanded', String(open));
   });
   updateCartCount();
+}
+
+// Supabase stores the session under sb-<project>-auth-token. Checking for it
+// lets every page show signed-in state without loading the Supabase library.
+function signedIn() {
+  try {
+    return Object.keys(localStorage).some((k) => /^sb-.+-auth-token$/.test(k));
+  } catch {
+    return false;
+  }
 }
 
 function updateCartCount() {
