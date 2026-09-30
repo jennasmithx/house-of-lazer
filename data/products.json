@@ -1,0 +1,10 @@
+[
+  { "id": "aftercare-balm", "name": "Laser Aftercare Balm", "category": "Aftercare", "price": 249, "size": "50 ml", "description": "Soothing, fragrance-free balm that calms and protects skin after laser and tattoo-removal sessions." },
+  { "id": "spf50-mineral", "name": "Mineral SPF 50 Sunscreen", "category": "Sun protection", "price": 329, "size": "75 ml", "description": "Broad-spectrum physical sunscreen. Essential daily protection before and after any laser treatment." },
+  { "id": "hyaluronic-serum", "name": "Hyaluronic Hydration Serum", "category": "Serums", "price": 419, "size": "30 ml", "description": "Lightweight multi-weight hyaluronic acid serum that pairs perfectly with microneedling results." },
+  { "id": "vitamin-c-serum", "name": "Vitamin C Brightening Serum", "category": "Serums", "price": 459, "size": "30 ml", "description": "Stabilised vitamin C to brighten dull skin and support even tone between pigmentation sessions." },
+  { "id": "gentle-cleanser", "name": "Gentle Cream Cleanser", "category": "Cleansers", "price": 219, "size": "150 ml", "description": "Low-foam, pH-balanced cleanser that is kind to sensitised, post-treatment skin." },
+  { "id": "barrier-moisturiser", "name": "Barrier Repair Moisturiser", "category": "Moisturisers", "price": 389, "size": "50 ml", "description": "Ceramide-rich moisturiser that rebuilds the skin barrier and locks in hydration." },
+  { "id": "cooling-gel", "name": "Cooling Aloe Gel", "category": "Aftercare", "price": 159, "size": "100 ml", "description": "Instant cooling relief for warm, flushed skin after laser hair removal." },
+  { "id": "gift-voucher-500", "name": "Gift Voucher – R500", "category": "Gift vouchers", "price": 500, "size": "Voucher", "description": "Treat someone special. Redeemable against any House of Lazer treatment or product." }
+]

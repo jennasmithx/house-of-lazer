@@ -1,0 +1,8 @@
+[
+  { "id": "tattoo-removal", "name": "Laser Tattoo Removal", "from": 650, "duration": "15–45 min", "description": "Advanced Q-switched laser breaks down ink particles so your body can clear them naturally. Priced per session by tattoo size; most tattoos need several sessions spaced 6–8 weeks apart." },
+  { "id": "microneedling", "name": "Microneedling", "from": 950, "duration": "60 min", "description": "Collagen induction therapy that refines texture, softens acne scarring and fine lines, and boosts overall radiance." },
+  { "id": "laser-hair-removal", "name": "Laser Hair Removal", "from": 350, "duration": "15–60 min", "description": "Long-lasting hair reduction for face and body. Packages available for underarms, bikini, legs and more." },
+  { "id": "pigmentation", "name": "Pigmentation Treatment", "from": 850, "duration": "30–45 min", "description": "Targets sun spots, melasma and uneven tone for a clearer, more even complexion." },
+  { "id": "carbon-peel", "name": "Carbon Laser Peel", "from": 750, "duration": "45 min", "description": "The \"Hollywood peel\" – deep-cleanses pores, controls oil and leaves skin instantly brighter with zero downtime." },
+  { "id": "skin-rejuvenation", "name": "Skin Rejuvenation", "from": 900, "duration": "45 min", "description": "Non-invasive laser toning that stimulates collagen, tightens and revitalises tired skin." }
+]

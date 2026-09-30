@@ -1,0 +1,18 @@
+{
+  "name": "house-of-lazer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "House of Lazer website with shop and PayFast checkout",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
