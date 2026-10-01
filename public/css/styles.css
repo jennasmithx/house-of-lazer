@@ -157,7 +157,10 @@ p { margin: 0 0 1em; }
   .nav-links.open { display: flex; }
   .nav-links a { display: block; padding: 12px 0; border-bottom: 1px solid var(--line); }
   .nav-book { display: none; }
+  .nav-links .nav-menu-book { display: block; padding-top: 16px; }
+  .nav-links .nav-menu-book a { color: var(--white); border: 0; padding: 14px 28px; }
 }
+.nav-menu-book { display: none; }
 
 /* Hero */
 .hero {
