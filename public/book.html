@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book a Treatment | House of Lazer</title>
+  <meta name="description" content="Request a booking for laser hair removal, tattoo removal, microneedling, peels, IV drips and more at House of Lazer, Port Shepstone.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script>try { var t = localStorage.getItem("hol-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+</head>
+<body>
+  <header id="site-header"></header>
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow">Bookings</span>
+        <h1>Book a treatment</h1>
+        <p class="lead">Tell us what you'd like and when suits you. We'll get back to you to confirm your appointment. It only takes a minute.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container booking-layout">
+        <form class="card form" id="booking-form" novalidate>
+          <div>
+            <label for="b-service">Which treatment?</label>
+            <select id="b-service" name="service"><option value="">Not sure yet – please advise me</option></select>
+          </div>
+
+          <div>
+            <span class="label">When suits you?</span>
+            <div class="form-row">
+              <div><label for="b-date" class="sublabel">Preferred day</label><input id="b-date" name="preferredDate" type="date"></div>
+              <div>
+                <span class="sublabel">Time of day</span>
+                <div class="pill-group" role="radiogroup" aria-label="Time of day">
+                  <label class="pill"><input type="radio" name="preferredTime" value="morning"><span>Morning</span></label>
+                  <label class="pill"><input type="radio" name="preferredTime" value="afternoon"><span>Afternoon</span></label>
+                  <label class="pill"><input type="radio" name="preferredTime" value="any" checked><span>Any</span></label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div><label for="b-name">Your name</label><input id="b-name" name="name" autocomplete="name" required></div>
+            <div><label for="b-phone">Cellphone number</label><input id="b-phone" name="phone" type="tel" autocomplete="tel" placeholder="e.g. 082 123 4567" required></div>
+          </div>
+          <div><label for="b-email">Email <span class="muted">(optional)</span></label><input id="b-email" name="email" type="email" autocomplete="email"></div>
+
+          <div>
+            <span class="label">How should we contact you?</span>
+            <div class="pill-group" role="radiogroup" aria-label="Contact method">
+              <label class="pill"><input type="radio" name="contactMethod" value="whatsapp" checked><span>WhatsApp</span></label>
+              <label class="pill"><input type="radio" name="contactMethod" value="call"><span>Phone call</span></label>
+              <label class="pill"><input type="radio" name="contactMethod" value="email"><span>Email</span></label>
+            </div>
+          </div>
+
+          <div>
+            <span class="label">Is this your first visit?</span>
+            <div class="pill-group" role="radiogroup" aria-label="First visit">
+              <label class="pill"><input type="radio" name="firstVisit" value="yes"><span>Yes</span></label>
+              <label class="pill"><input type="radio" name="firstVisit" value="no"><span>No, I've been before</span></label>
+            </div>
+          </div>
+
+          <div><label for="b-notes">Anything we should know? <span class="muted">(optional)</span></label><textarea id="b-notes" name="notes" placeholder="E.g. the area you'd like treated, skin concerns, or questions you have."></textarea></div>
+
+          <div class="alert" id="booking-alert" hidden></div>
+          <button class="btn btn--primary btn--block" type="submit">Send booking request</button>
+          <p class="muted center" style="font-size:.85rem;margin:0">No payment needed now. Your appointment is confirmed once we've been in touch.</p>
+        </form>
+
+        <aside class="booking-aside">
+          <div class="card">
+            <h3>How booking works</h3>
+            <ol class="steps">
+              <li><strong>Send your request</strong><span>Choose a treatment and when suits you.</span></li>
+              <li><strong>We'll be in touch</strong><span>Usually within one working day, on WhatsApp, by phone or email.</span></li>
+              <li><strong>Pop in and relax</strong><span>Your first visit starts with a quick, free consultation.</span></li>
+            </ol>
+          </div>
+          <div class="card" id="whatsapp-card" hidden>
+            <h3>Prefer WhatsApp?</h3>
+            <p>Send us a message and we'll help you book.</p>
+            <a class="btn btn--whatsapp btn--block" id="whatsapp-link" target="_blank" rel="noopener">Chat on WhatsApp</a>
+          </div>
+          <div class="card">
+            <h3>Opening hours</h3>
+            <table class="hours">
+              <tr><td>Monday – Friday</td><td>09:00 – 17:00</td></tr>
+              <tr><td>Saturday</td><td>09:00 – 13:00</td></tr>
+              <tr><td>Sunday &amp; public holidays</td><td>Closed</td></tr>
+            </table>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <footer id="site-footer"></footer>
+  <script src="/js/site.js"></script>
+  <script src="/js/book.js"></script>
+</body>
+</html>

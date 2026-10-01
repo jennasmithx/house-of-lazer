@@ -1,0 +1,9 @@
+[
+  { "id": "laser-hair-removal", "name": "Laser Hair Removal", "from": 350, "duration": "15–60 min", "image": "/images/services/laser-hair-removal.jpg", "description": "Long-lasting hair reduction for face and body, from upper lip and underarms to full legs. Course packages available." },
+  { "id": "tattoo-removal", "name": "Laser Tattoo Removal", "from": 650, "duration": "15–45 min", "image": "/images/services/tattoo-removal.jpg", "description": "The laser breaks ink into tiny particles that your body clears naturally. Priced per session by size; most tattoos need several sessions spaced 6–8 weeks apart." },
+  { "id": "microneedling", "name": "Microneedling", "from": 950, "duration": "60 min", "image": "/images/services/microneedling.jpg", "description": "Collagen induction therapy that refines texture, softens acne scarring and fine lines, and brings back your glow." },
+  { "id": "mesotherapy", "name": "Mesotherapy", "from": 850, "duration": "45 min", "image": "/images/services/mesotherapy.jpg", "description": "A cocktail of vitamins, hyaluronic acid and nutrients delivered into the skin to hydrate, brighten and revitalise." },
+  { "id": "chemical-peels", "name": "Chemical Peels", "from": 650, "duration": "30–45 min", "image": "/images/services/chemical-peel.jpg", "description": "Professional peels matched to your skin to clear congestion, fade pigmentation and even out tone." },
+  { "id": "iv-drips", "name": "IV Vitamin Drips", "from": 1200, "duration": "45–60 min", "image": "/images/services/iv-drip.jpg", "description": "Vitamin infusions to support hydration, energy and skin radiance from the inside out. A short health check is done before your first drip." },
+  { "id": "skin-rejuvenation", "name": "Skin Rejuvenation", "from": 900, "duration": "45 min", "image": "/images/services/skin-rejuvenation.jpg", "description": "Non-invasive laser toning that stimulates collagen, tightens and revitalises tired-looking skin." }
+]
