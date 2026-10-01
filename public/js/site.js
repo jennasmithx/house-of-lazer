@@ -162,6 +162,7 @@ function renderHeader() {
       <a class="logo" href="/">House of <span>Lazer</span></a>
       <ul class="nav-links" id="nav-links">
         ${NAV.map(([href, label]) => `<li><a href="${href}" class="${href === here ? 'active' : ''}">${label}</a></li>`).join('')}
+        <li class="nav-menu-book"><a class="btn btn--primary btn--block" href="/book">Book a treatment</a></li>
       </ul>
       <div class="nav-actions">
         <a class="btn btn--primary btn--sm nav-book" href="/book">Book now</a>
