@@ -80,7 +80,7 @@ test('rejects bad checkout input', async () => {
 });
 
 test('ITN marks the order paid exactly once', async () => {
-  const { orderId } = await (await post('/api/checkout', { items: [{ id: 'spf50-mineral', qty: 1 }], customer, fulfilment: 'collect' })).json();
+  const { orderId } = await (await post('/api/checkout', { items: [{ id: 'spf50', qty: 1 }], customer, fulfilment: 'collect' })).json();
   const fields = { m_payment_id: orderId, pf_payment_id: '999', payment_status: 'COMPLETE', item_name: `House of Lazer order ${orderId}`, name_first: 'Test', name_last: "O'Brien", amount_gross: '329.00', merchant_id: '10000100' };
 
   assert.strictEqual((await notify(itnBody(fields))).status, 200);
@@ -96,7 +96,7 @@ test('ITN marks the order paid exactly once', async () => {
 });
 
 test('ITN rejects tampered or wrong-amount notifications', async () => {
-  const { orderId } = await (await post('/api/checkout', { items: [{ id: 'vitamin-c-serum', qty: 1 }], customer, fulfilment: 'collect' })).json();
+  const { orderId } = await (await post('/api/checkout', { items: [{ id: 'brightening-serum', qty: 1 }], customer, fulfilment: 'collect' })).json();
   const fields = { m_payment_id: orderId, payment_status: 'COMPLETE', amount_gross: '459.00', merchant_id: '10000100' };
 
   const tampered = itnBody(fields).replace('459.00', '1.00');

@@ -137,8 +137,8 @@ const DemoAuth = (() => {
     async updateProfile(changes) { write({ ...read(), ...changes }); },
     async orders() {
       return [
-        { id: 'HL-DEMO000002', created_at: daysAgo(3), status: 'ready', total: 578, fulfilment: 'collect', order_items: [{ name: 'Laser Aftercare Balm', qty: 1, price: 249 }, { name: 'Mineral SPF 50 Sunscreen', qty: 1, price: 329 }] },
-        { id: 'HL-DEMO000001', created_at: daysAgo(40), status: 'shipped', total: 554, fulfilment: 'delivery', order_items: [{ name: 'Vitamin C Brightening Serum', qty: 1, price: 459 }] },
+        { id: 'HL-DEMO000002', created_at: daysAgo(3), status: 'ready', total: 578, fulfilment: 'collect', order_items: [{ name: 'Laser Aftercare Balm', qty: 1, price: 249 }, { name: 'Daily SPF 50 Fluid', qty: 1, price: 329 }] },
+        { id: 'HL-DEMO000001', created_at: daysAgo(40), status: 'shipped', total: 554, fulfilment: 'delivery', order_items: [{ name: 'Glutathione + Vitamin C Serum', qty: 1, price: 459 }] },
       ];
     },
     async onChange(cb) { listeners.push(cb); },

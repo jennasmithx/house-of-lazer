@@ -4,7 +4,7 @@ const SITE = {
   name: 'House of Lazer',
   phone: '+27 00 000 0000',
   email: 'hello@houseoflazer.co.za',
-  address: 'Your street address, Suburb, City',
+  address: 'Port Shepstone, KwaZulu-Natal',
   instagram: 'https://instagram.com/',
   facebook: 'https://facebook.com/',
 };
@@ -107,6 +107,9 @@ function toast(html) {
 
 // ---- Shared card templates ----
 function productMedia(p) {
+  if (p.category === 'Gift vouchers') {
+    return `<div class="voucher" aria-hidden="true"><span>House of Lazer</span><strong>${money(p.price).replace('.00', '').replace(' ', '')}</strong><small>Gift voucher</small></div>`;
+  }
   return p.image
     ? `<img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy">`
     : `<span class="placeholder" aria-hidden="true">${escapeHtml(initials(p.name))}</span>`;
@@ -130,8 +133,8 @@ function productCard(p) {
 
 function serviceCard(s, { detailed = false } = {}) {
   return `
-    <article class="card service-card" id="${escapeHtml(s.id)}">
-      <div class="icon-badge">${ICONS.spark}</div>
+    <article class="card service-card${s.image ? ' service-card--photo' : ''}" id="${escapeHtml(s.id)}">
+      ${s.image ? `<div class="service-media"><img src="${escapeHtml(s.image)}" alt="${escapeHtml(s.name)}" loading="lazy"></div>` : `<div class="icon-badge">${ICONS.spark}</div>`}
       <h3>${escapeHtml(s.name)}</h3>
       <p>${escapeHtml(s.description)}</p>
       <div class="meta"><span>${escapeHtml(s.duration)}</span><span>From <strong>${money(s.from).replace('.00', '')}</strong></span></div>
@@ -202,7 +205,7 @@ function renderFooter() {
       <div class="footer-grid">
         <div>
           <a class="logo" href="/">House of <span>Lazer</span></a>
-          <p>Advanced laser and skin treatments in a calm, welcoming space. Real results, honest advice.</p>
+          <p>Laser and skin treatments in Port Shepstone on the KZN South Coast. Real results, honest advice.</p>
         </div>
         <div>
           <h4>Explore</h4>
@@ -211,10 +214,10 @@ function renderFooter() {
         <div>
           <h4>Treatments</h4>
           <ul>
+            <li><a href="/services#laser-hair-removal">Laser hair removal</a></li>
             <li><a href="/services#tattoo-removal">Tattoo removal</a></li>
             <li><a href="/services#microneedling">Microneedling</a></li>
-            <li><a href="/services#laser-hair-removal">Laser hair removal</a></li>
-            <li><a href="/services#pigmentation">Pigmentation</a></li>
+            <li><a href="/services#iv-drips">IV vitamin drips</a></li>
           </ul>
         </div>
         <div>

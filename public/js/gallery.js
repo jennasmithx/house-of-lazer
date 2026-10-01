@@ -1,14 +1,16 @@
-// Add photos to /public/images/gallery and list them here.
+// Photos shown on the gallery page. These are demo stock photos; swap in
+// House of Lazer's own (e.g. /images/gallery/...) before launch.
 // Leave `src` empty to show a placeholder tile.
 const GALLERY = [
-  { src: '', caption: 'Tattoo removal – after 4 sessions', category: 'Tattoo removal' },
-  { src: '', caption: 'Tattoo removal – fine-line lettering', category: 'Tattoo removal' },
-  { src: '', caption: 'Microneedling – acne scarring', category: 'Skin' },
-  { src: '', caption: 'Pigmentation – sun spots', category: 'Skin' },
-  { src: '', caption: 'Carbon laser peel glow', category: 'Skin' },
-  { src: '', caption: 'Laser hair removal – underarms', category: 'Hair removal' },
-  { src: '', caption: 'Our treatment room', category: 'Studio' },
-  { src: '', caption: 'Reception & retail', category: 'Studio' },
+  { src: '/images/site/studio.jpg', caption: 'Our treatment room', category: 'Studio' },
+  { src: '/images/services/laser-hair-removal.jpg', caption: 'Laser hair removal', category: 'Laser' },
+  { src: '/images/services/tattoo-removal.jpg', caption: 'Laser tattoo removal', category: 'Laser' },
+  { src: '/images/services/microneedling.jpg', caption: 'Microneedling', category: 'Skin' },
+  { src: '/images/services/mesotherapy.jpg', caption: 'Mesotherapy', category: 'Skin' },
+  { src: '/images/services/chemical-peel.jpg', caption: 'Chemical peel', category: 'Skin' },
+  { src: '/images/site/treatment-room.jpg', caption: 'Relax and unwind', category: 'Studio' },
+  { src: '/images/services/iv-drip.jpg', caption: 'IV vitamin drips', category: 'Wellness' },
+  { src: '/images/site/skincare-ritual.jpg', caption: 'Your aftercare routine', category: 'Skin' },
 ];
 
 (() => {

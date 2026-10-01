@@ -92,7 +92,7 @@ For proper testing, create your own sandbox account at <https://sandbox.payfast.
 
 - **Products:** `data/products.json`. Add `"image": "/images/products/name.jpg"` to show a photo.
 - **Services & prices:** `data/services.json`
-- **Gallery photos:** put them in `public/images/gallery/` and list them at the top of `public/js/gallery.js`.
+- **Photos:** the demo uses free Pexels stock photos (listed in `public/images/CREDITS.md`). Replace the files in `public/images/` with her own, keeping the same names, or update the paths in `data/*.json` and `public/js/gallery.js`.
 - **Contact details, social links:** `SITE` at the top of `public/js/site.js`
 - **About page** (founder name, stats): `public/about.html`
 - **Opening hours:** `public/contact.html`
