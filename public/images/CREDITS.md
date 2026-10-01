@@ -6,18 +6,18 @@ replace them with House of Lazer's own photos before launch.
 
 | File | Pexels photo ID |
 | --- | --- |
-| site/hero.jpg | 7446675 |
+| site/hero.jpg | 3985329 |
 | site/studio.jpg | 6899550 |
-| site/treatment-room.jpg | 36436443 |
+| site/treatment-room.jpg | 4586739 |
 | site/spa-portrait.jpg | 10930950 |
 | site/serum-ritual.jpg | 6954612 |
 | services/tattoo-removal.jpg | 12556702 |
 | services/laser-hair-removal.jpg | 35103885 |
 | services/microneedling.jpg | 7446658 |
-| services/mesotherapy.jpg | 36436445 |
+| services/mesotherapy.jpg | 4586713 |
 | services/chemical-peel.jpg | 6977501 |
 | services/iv-drip.jpg | 23532633 |
-| services/skin-rejuvenation.jpg | 36436448 |
+| services/skin-rejuvenation.jpg | 4207234 |
 | products/glutathione-capsules.jpg | 13787561 |
 | products/brightening-serum.jpg | 8140898 |
 | products/hyaluronic-serum.jpg | 3762882 |
