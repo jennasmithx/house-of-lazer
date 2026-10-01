@@ -6,7 +6,7 @@ const Auth = (() => {
 
   // Supabase settings come from the server so they live in one place (.env / Vercel).
   function client() {
-    clientPromise ??= getJson('/api/shop-config').then((cfg) => {
+    clientPromise ??= shopConfig().then((cfg) => {
       if (!cfg.supabaseUrl || !cfg.supabaseAnonKey) return null;
       return window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
     }).catch(() => null);
@@ -96,5 +96,58 @@ const Auth = (() => {
     return sb;
   }
 
-  return { client, session, profile, signIn, signUp, signOut, sendPasswordReset, updatePassword, updateProfile, orders };
+  // Notifies `callback` whenever the customer signs in or out.
+  async function onChange(callback) {
+    const sb = await client();
+    if (sb) sb.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') setTimeout(callback, 0);
+    });
+  }
+
+  return { client, session, profile, signIn, signUp, signOut, sendPasswordReset, updatePassword, updateProfile, orders, onChange };
 })();
+
+// ---- Demo preview ----
+// Until Supabase is connected, accounts are simulated in this browser tab so
+// the sign-in, account and pre-filled checkout pages can still be shown.
+const DemoAuth = (() => {
+  const KEY = 'hol-demo-user';
+  const listeners = [];
+  const read = () => { try { return JSON.parse(sessionStorage.getItem(KEY)); } catch { return null; } };
+  const write = (u) => {
+    try { u ? sessionStorage.setItem(KEY, JSON.stringify(u)) : sessionStorage.removeItem(KEY); } catch { /* ignore */ }
+    listeners.forEach((cb) => setTimeout(cb, 0));
+  };
+  const daysAgo = (n) => new Date(Date.now() - n * 864e5).toISOString();
+
+  return {
+    session: async () => { const u = read(); return u ? { user: { id: 'demo', email: u.email }, access_token: null } : null; },
+    profile: async () => read(),
+    async signIn(email, password) {
+      if (!email || !password) throw new Error('Please enter your email and password.');
+      write({ email, first_name: 'Thandi', last_name: 'Demo', phone: '0821234567', street: '12 Example Street', suburb: 'Gardens', city: 'Cape Town', postal_code: '8001' });
+    },
+    async signUp({ email, firstName, lastName, phone }) {
+      write({ email, first_name: firstName, last_name: lastName, phone });
+      return true;
+    },
+    async signOut() { write(null); },
+    async sendPasswordReset() {},
+    async updatePassword() {},
+    async updateProfile(changes) { write({ ...read(), ...changes }); },
+    async orders() {
+      return [
+        { id: 'HL-DEMO000002', created_at: daysAgo(3), status: 'ready', total: 578, fulfilment: 'collect', order_items: [{ name: 'Laser Aftercare Balm', qty: 1, price: 249 }, { name: 'Mineral SPF 50 Sunscreen', qty: 1, price: 329 }] },
+        { id: 'HL-DEMO000001', created_at: daysAgo(40), status: 'shipped', total: 554, fulfilment: 'delivery', order_items: [{ name: 'Vitamin C Brightening Serum', qty: 1, price: 459 }] },
+      ];
+    },
+    async onChange(cb) { listeners.push(cb); },
+  };
+})();
+
+// Swap in the demo when Supabase isn't configured. Pages call these before
+// doing anything else, so the choice is made once per page.
+const authReady = Auth.client().then((sb) => {
+  if (!sb) Object.assign(Auth, DemoAuth, { demo: true });
+  return Auth;
+});

@@ -1,5 +1,5 @@
 const crypto = require('node:crypto');
-const { getAdmin } = require('../lib/supabase');
+const { getAdmin, isConfigured } = require('../lib/supabase');
 const { allow, clean, isEmail } = require('../lib/http');
 const { sendContactEmail } = require('../lib/email');
 
@@ -17,6 +17,8 @@ module.exports = async (req, res) => {
   if (!msg.name || !isEmail(msg.email) || !msg.message) {
     return res.status(400).json({ error: 'Please enter your name, a valid email and a message.' });
   }
+
+  if (!isConfigured()) return res.status(200).json({ ok: true, demo: true });
 
   const { error } = await getAdmin().from('messages').insert(msg);
   if (error) {

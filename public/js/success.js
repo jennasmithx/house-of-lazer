@@ -16,6 +16,10 @@
       const how = order.fulfilment === 'delivery'
         ? "We'll email you when it's on its way."
         : "We'll let you know when it's ready to collect.";
+      if (order.status === 'demo') {
+        text.textContent = "That was a test payment through PayFast's sandbox. On the live site, the customer gets an email confirmation and the order appears in their account.";
+        return;
+      }
       if (order.status === 'paid') {
         text.textContent = `Payment of ${money(order.total)} received. ${how}`;
         return;

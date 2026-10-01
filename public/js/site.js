@@ -43,6 +43,13 @@ async function getJson(url) {
   return res.json();
 }
 
+// Site settings from the server, fetched once per page.
+let shopConfigPromise;
+function shopConfig() {
+  shopConfigPromise ??= getJson('/api/shop-config');
+  return shopConfigPromise;
+}
+
 // ---- Cart (browser storage; the server re-prices everything at checkout) ----
 const Cart = (() => {
   const KEY = 'hol-cart';
@@ -171,7 +178,8 @@ function renderHeader() {
 // lets every page show signed-in state without loading the Supabase library.
 function signedIn() {
   try {
-    return Object.keys(localStorage).some((k) => /^sb-.+-auth-token$/.test(k));
+    return Object.keys(localStorage).some((k) => /^sb-.+-auth-token$/.test(k))
+      || Boolean(sessionStorage.getItem('hol-demo-user'));
   } catch {
     return false;
   }
@@ -225,6 +233,60 @@ function renderFooter() {
       </div>
     </div>`;
 }
+
+// ---- Demo preview: banner + style switcher (only until Supabase is connected) ----
+const THEMES = [
+  { id: 'luxe', name: 'Warm & luxe', swatch: 'linear-gradient(135deg, #1d1a1f 50%, #a8674f 50%)' },
+  { id: 'clinical', name: 'Clean & clinical', swatch: 'linear-gradient(135deg, #15253d 50%, #217678 50%)' },
+  { id: 'blush', name: 'Soft & feminine', swatch: 'linear-gradient(135deg, #f7e2e6 50%, #a5566c 50%)' },
+];
+
+function setTheme(id) {
+  if (id === 'luxe') delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = id;
+  try { localStorage.setItem('hol-theme', id); } catch { /* storage unavailable */ }
+}
+
+function renderDemoTools() {
+  const banner = document.createElement('div');
+  banner.className = 'demo-banner';
+  banner.innerHTML = '<strong>Preview site.</strong> Photos, prices and details are placeholders. Payments use PayFast test mode, so no real money moves.';
+  document.body.prepend(banner);
+
+  // Starts tucked away on phones so it doesn't cover the page.
+  let collapsed = window.innerWidth < 700;
+  try {
+    const saved = sessionStorage.getItem('hol-switcher');
+    if (saved) collapsed = saved === 'closed';
+  } catch { /* ignore */ }
+
+  const box = document.createElement('div');
+  box.className = `style-switcher${collapsed ? ' collapsed' : ''}`;
+  const current = document.documentElement.dataset.theme || 'luxe';
+  box.innerHTML = `
+    <button type="button" class="collapse" aria-label="Hide style options">&times;</button>
+    <button type="button" class="reopen">Try a different look</button>
+    <p>Try a different look</p>
+    <div class="style-options">
+      ${THEMES.map((t) => `<button type="button" class="style-option" data-theme-id="${t.id}" aria-pressed="${t.id === current}"><span class="style-swatch" style="background:${t.swatch}"></span>${t.name}</button>`).join('')}
+    </div>`;
+  document.body.appendChild(box);
+
+  box.addEventListener('click', (e) => {
+    const option = e.target.closest('[data-theme-id]');
+    if (option) {
+      setTheme(option.dataset.themeId);
+      box.querySelectorAll('[data-theme-id]').forEach((b) => b.setAttribute('aria-pressed', String(b === option)));
+      return;
+    }
+    if (e.target.closest('.collapse, .reopen')) {
+      const closed = box.classList.toggle('collapsed');
+      try { sessionStorage.setItem('hol-switcher', closed ? 'closed' : 'open'); } catch { /* ignore */ }
+    }
+  });
+}
+
+shopConfig().then((cfg) => { if (cfg.demo) renderDemoTools(); }).catch(() => {});
 
 document.addEventListener('cart:change', updateCartCount);
 window.addEventListener('storage', updateCartCount);

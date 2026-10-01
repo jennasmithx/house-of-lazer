@@ -3,12 +3,13 @@
 // is ever marked paid. Modelled on PetPaw Haven's live handler.
 
 const payfast = require('../lib/payfast');
-const { getAdmin } = require('../lib/supabase');
+const { getAdmin, isConfigured } = require('../lib/supabase');
 const { readRawBody } = require('../lib/http');
 const { sendOrderPaidEmails } = require('../lib/email');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).end();
+  if (!isConfigured()) return res.status(200).send('demo mode: nothing to update');
 
   const raw = await readRawBody(req);
   const data = Object.fromEntries(new URLSearchParams(raw));

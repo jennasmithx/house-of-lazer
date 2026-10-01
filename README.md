@@ -24,6 +24,17 @@ schema.sql       Supabase tables, sign-up trigger and security rules
 dev-server.js    Runs the site + api/ locally, the way Vercel does
 ```
 
+## Demo mode
+
+Until Supabase is connected (no `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY`), the site runs as a preview, so it can be deployed to Vercel with no setup at all:
+
+- A banner says it's a preview, and a **"Try a different look"** switcher offers three styles: Warm & luxe, Clean & clinical, and Soft & feminine. The choice is remembered across pages.
+- Checkout still goes to the real PayFast sandbox, but nothing is saved.
+- Sign-in accepts any email and password and shows a sample account with orders.
+- The contact form shows the success message but doesn't send anything.
+
+Once Supabase is connected, demo mode switches off by itself. To keep one look permanently, move its colours from `[data-theme="..."]` into `:root` in `styles.css`.
+
 ## Setup
 
 ### 1. Supabase

@@ -17,17 +17,11 @@
     amount_mismatch: 'Payment query',
   };
 
-  const sb = await Auth.client();
-  if (!sb) {
-    root.innerHTML = '<div class="alert alert--info auth-card">Customer accounts are being set up. Please check back soon. You can still shop as a guest.</div>';
-    return;
-  }
+  await authReady;
 
   // Covers sign in/out here and in other tabs, and the redirect back from
   // the email confirmation link.
-  sb.auth.onAuthStateChange((event) => {
-    if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') setTimeout(render, 0);
-  });
+  Auth.onChange(render);
 
   // Supabase also fires SIGNED_IN when the tab regains focus, so only
   // re-render when the signed-in state actually changes.
@@ -79,6 +73,7 @@
           <form class="form" id="signin-form" novalidate>
             <div><label for="s-email">Email</label><input id="s-email" name="email" type="email" autocomplete="email" required></div>
             <div><label for="s-password">Password</label><input id="s-password" name="password" type="password" autocomplete="current-password" required></div>
+            ${Auth.demo ? '<div class="alert alert--info">Preview: type any email and password to see the account area.</div>' : ''}
             ${alertBox('signin-alert')}
             <button class="btn btn--primary btn--block" type="submit">Sign in</button>
             <div class="form-links"><a href="/forgot-password">Forgot password?</a><a href="/shop">Continue as guest</a></div>

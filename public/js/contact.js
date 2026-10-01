@@ -35,7 +35,9 @@
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Something went wrong.');
       form.reset();
-      show('success', "Thanks! Your message has been sent. We'll be in touch soon.");
+      show('success', data.demo
+        ? 'Preview: this is the message customers will see. Messages will be emailed to you once the site goes live.'
+        : "Thanks! Your message has been sent. We'll be in touch soon.");
     } catch (err) {
       show('error', err.message);
     } finally {

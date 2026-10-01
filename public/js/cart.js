@@ -2,7 +2,8 @@
   const root = document.getElementById('cart-root');
   let products, config, profile, session;
   try {
-    [products, config, session] = await Promise.all([getJson('/api/products'), getJson('/api/shop-config'), Auth.session()]);
+    await authReady;
+    [products, config, session] = await Promise.all([getJson('/api/products'), shopConfig(), Auth.session()]);
     profile = session ? await Auth.profile() : null;
   } catch {
     root.innerHTML = '<div class="alert alert--error">Sorry, the shop could not be loaded. Please refresh the page.</div>';
@@ -191,7 +192,7 @@
       // Signed-in customers send their access token so the order is linked to their account.
       const current = await Auth.session();
       const headers = { 'Content-Type': 'application/json' };
-      if (current) headers.Authorization = `Bearer ${current.access_token}`;
+      if (current?.access_token) headers.Authorization = `Bearer ${current.access_token}`;
       const res = await fetch('/api/checkout', { method: 'POST', headers, body: JSON.stringify(payload) });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || 'Checkout failed. Please try again.');

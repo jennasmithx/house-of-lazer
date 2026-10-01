@@ -15,6 +15,7 @@
     const btn = forgot.querySelector('button');
     btn.disabled = true;
     try {
+      await authReady;
       await Auth.sendPasswordReset(email);
       // Same message whether or not the account exists, so emails can't be probed.
       show(alertEl, 'success', `If an account exists for ${email}, a reset link is on its way. Check your inbox and spam folder.`);
@@ -33,6 +34,7 @@
     // The email link signs the customer in with a short-lived recovery
     // session; supabase-js reads it from the URL before getSession() resolves.
     (async () => {
+      await authReady;
       if (!(await Auth.session())) {
         reset.innerHTML = `
           <h2>Link expired</h2>

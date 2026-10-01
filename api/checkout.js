@@ -6,7 +6,7 @@
 const crypto = require('node:crypto');
 const payfast = require('../lib/payfast');
 const { priceCart } = require('../lib/shop');
-const { getAdmin, getUser } = require('../lib/supabase');
+const { getAdmin, getUser, isConfigured } = require('../lib/supabase');
 const { allow, clean, isEmail, siteUrl } = require('../lib/http');
 
 module.exports = async (req, res) => {
@@ -42,8 +42,16 @@ module.exports = async (req, res) => {
     }
   }
 
-  const user = await getUser(req);
   const orderId = `HL-${crypto.randomBytes(5).toString('hex').toUpperCase()}`;
+
+  // Demo mode (no database yet): skip saving and go straight to the PayFast
+  // sandbox so the checkout can still be tried end to end.
+  if (!isConfigured()) {
+    if (!payfast.config().sandbox) return res.status(500).json({ error: 'The shop is not set up yet.' });
+    return res.status(200).json({ orderId, demo: true, ...paymentFor(orderId, priced, fulfilment, { firstName, lastName, email, phone }) });
+  }
+
+  const user = await getUser(req);
   const db = getAdmin();
 
   const { error: orderError } = await db.from('orders').insert({
@@ -72,9 +80,13 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: 'Could not create your order. Please try again.' });
   }
 
+  res.status(200).json({ orderId, ...paymentFor(orderId, priced, fulfilment, { firstName, lastName, email, phone }) });
+};
+
+function paymentFor(orderId, priced, fulfilment, { firstName, lastName, email, phone }) {
   const base = siteUrl();
   const itemCount = priced.lines.reduce((n, l) => n + l.qty, 0);
-  const payment = payfast.buildPayment({
+  return payfast.buildPayment({
     return_url: `${base}/checkout-success?order=${orderId}`,
     cancel_url: `${base}/checkout-cancel?order=${orderId}`,
     notify_url: `${base}/api/payfast-notify`,
@@ -87,6 +99,4 @@ module.exports = async (req, res) => {
     item_name: `House of Lazer order ${orderId}`,
     item_description: `${itemCount} item${itemCount === 1 ? '' : 's'} – ${fulfilment === 'delivery' ? 'delivery' : 'collect in store'}`,
   });
-
-  res.status(200).json({ orderId, ...payment });
-};
+}
