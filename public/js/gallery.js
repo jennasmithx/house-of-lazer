@@ -10,7 +10,8 @@ const GALLERY = [
   { src: '/images/services/chemical-peel.jpg', caption: 'Chemical peel', category: 'Skin' },
   { src: '/images/site/treatment-room.jpg', caption: 'Relax and unwind', category: 'Studio' },
   { src: '/images/services/iv-drip.jpg', caption: 'IV vitamin drips', category: 'Wellness' },
-  { src: '/images/site/skincare-ritual.jpg', caption: 'Your aftercare routine', category: 'Skin' },
+  { src: '/images/site/serum-ritual.jpg', caption: 'Your aftercare routine', category: 'Skin' },
+  { src: '/images/site/spa-portrait.jpg', caption: 'Time for you', category: 'Wellness' },
 ];
 
 (() => {

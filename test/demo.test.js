@@ -41,6 +41,8 @@ test('checkout still builds a PayFast sandbox payment', async () => {
 test('contact form and payment notifications succeed without saving', async () => {
   const contact = await (await post('/api/contact', { name: 'A', email: 'a@b.co', message: 'Hi' })).json();
   assert.deepStrictEqual(contact, { ok: true, demo: true });
+  const booking = await (await post('/api/booking', { name: 'A', phone: '0821234567' })).json();
+  assert.deepStrictEqual(booking, { ok: true, demo: true });
   const itn = await fetch(`${base}/api/payfast-notify`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'm_payment_id=HL-1' });
   assert.strictEqual(itn.status, 200);
 });

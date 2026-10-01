@@ -114,8 +114,26 @@ test('contact form stores messages', async () => {
   assert.strictEqual((await post('/api/contact', { name: 'Ann', email: 'bad', message: 'Hi' })).status, 400);
 });
 
+test('booking requests are validated and stored', async () => {
+  const ok = await post('/api/booking', { service: 'microneedling', name: 'Nomsa', phone: '082 123 4567', contactMethod: 'whatsapp', preferredDate: '2026-10-20', preferredTime: 'morning', firstVisit: 'yes', notes: 'Acne scars' });
+  assert.strictEqual(ok.status, 200);
+  const saved = db.tables.bookings.at(-1);
+  assert.strictEqual(saved.service, 'Microneedling');
+  assert.strictEqual(saved.preferred_time, 'morning');
+  assert.strictEqual(saved.first_visit, true);
+
+  const unsure = await post('/api/booking', { service: 'made-up', name: 'Lee', phone: '0821234567', preferredTime: 'midnight' });
+  assert.strictEqual(unsure.status, 200);
+  assert.strictEqual(db.tables.bookings.at(-1).service, 'Not sure yet – please advise');
+  assert.strictEqual(db.tables.bookings.at(-1).preferred_time, 'any');
+
+  assert.strictEqual((await post('/api/booking', { name: '', phone: '0821234567' })).status, 400);
+  assert.strictEqual((await post('/api/booking', { name: 'Lee', phone: '12' })).status, 400);
+  assert.strictEqual((await post('/api/booking', { name: 'Lee', phone: '0821234567', contactMethod: 'email' })).status, 400);
+});
+
 test('pages are served without .html', async () => {
-  for (const page of ['/', '/about', '/services', '/shop', '/gallery', '/contact', '/cart', '/account', '/forgot-password', '/reset-password']) {
+  for (const page of ['/', '/about', '/services', '/shop', '/gallery', '/contact', '/cart', '/account', '/forgot-password', '/reset-password', '/book']) {
     assert.strictEqual((await realFetch(base + page)).status, 200, page);
   }
   assert.strictEqual((await realFetch(base + '/missing')).status, 404);

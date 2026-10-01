@@ -98,11 +98,29 @@ create table if not exists public.messages (
   created_at timestamptz not null default now()
 );
 
+-- ─── Booking requests ───────────────────────────────────────────────────────
+-- Customers ask for a treatment and a preferred time; the owner confirms.
+create table if not exists public.bookings (
+  id             uuid primary key,
+  service        text not null,
+  name           text not null,
+  phone          text not null,
+  email          text,
+  contact_method text not null check (contact_method in ('whatsapp', 'call', 'email')),
+  preferred_date date,
+  preferred_time text not null default 'any' check (preferred_time in ('morning', 'afternoon', 'any')),
+  first_visit    boolean,
+  notes          text,
+  status         text not null default 'new' check (status in ('new', 'contacted', 'booked', 'cancelled')),
+  created_at     timestamptz not null default now()
+);
+
 -- ─── Row-level security ─────────────────────────────────────────────────────
 alter table public.profiles    enable row level security;
 alter table public.orders      enable row level security;
 alter table public.order_items enable row level security;
 alter table public.messages    enable row level security;
+alter table public.bookings    enable row level security;
 
 drop policy if exists "Read own profile" on public.profiles;
 create policy "Read own profile" on public.profiles
@@ -129,4 +147,8 @@ create policy "Read own order items" on public.order_items
 
 drop policy if exists "Admin reads messages" on public.messages;
 create policy "Admin reads messages" on public.messages
+  for select using (public.is_admin());
+
+drop policy if exists "Admin reads bookings" on public.bookings;
+create policy "Admin reads bookings" on public.bookings
   for select using (public.is_admin());

@@ -10,6 +10,7 @@ It uses the same setup as PetPaw Haven (Vercel + Supabase + PayFast + Resend), w
 | --- | --- |
 | Home, About, Services, Shop, Gallery, Contact | `/`, `/about`, `/services`, `/shop`, `/gallery`, `/contact` |
 | Cart & checkout | `/cart` |
+| Book a treatment (request form) | `/book` |
 | Sign in, create account, my orders & details | `/account` |
 | Forgot / reset password | `/forgot-password`, `/reset-password` |
 
@@ -93,7 +94,7 @@ For proper testing, create your own sandbox account at <https://sandbox.payfast.
 - **Products:** `data/products.json`. Add `"image": "/images/products/name.jpg"` to show a photo.
 - **Services & prices:** `data/services.json`
 - **Photos:** the demo uses free Pexels stock photos (listed in `public/images/CREDITS.md`). Replace the files in `public/images/` with her own, keeping the same names, or update the paths in `data/*.json` and `public/js/gallery.js`.
-- **Contact details, social links:** `SITE` at the top of `public/js/site.js`
+- **Contact details, social links, WhatsApp number:** `SITE` at the top of `public/js/site.js` (setting `whatsapp` shows a "Chat on WhatsApp" button on the booking page)
 - **About page** (founder name, stats): `public/about.html`
 - **Opening hours:** `public/contact.html`
 - **Colours & fonts:** CSS variables at the top of `public/css/styles.css`

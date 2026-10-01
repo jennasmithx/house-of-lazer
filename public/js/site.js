@@ -5,6 +5,8 @@ const SITE = {
   phone: '+27 00 000 0000',
   email: 'hello@houseoflazer.co.za',
   address: 'Port Shepstone, KwaZulu-Natal',
+  // International format without + or spaces, e.g. '27821234567'. Leave empty to hide WhatsApp buttons.
+  whatsapp: '',
   instagram: 'https://instagram.com/',
   facebook: 'https://facebook.com/',
 };
@@ -138,7 +140,7 @@ function serviceCard(s, { detailed = false } = {}) {
       <h3>${escapeHtml(s.name)}</h3>
       <p>${escapeHtml(s.description)}</p>
       <div class="meta"><span>${escapeHtml(s.duration)}</span><span>From <strong>${money(s.from).replace('.00', '')}</strong></span></div>
-      ${detailed ? `<div class="actions"><a class="btn btn--outline btn--sm" href="/contact?service=${encodeURIComponent(s.id)}">Book this treatment</a></div>` : ''}
+      ${detailed ? `<div class="actions"><a class="btn btn--outline btn--sm" href="/book?service=${encodeURIComponent(s.id)}">Book this treatment</a></div>` : ''}
     </article>`;
 }
 
@@ -162,7 +164,7 @@ function renderHeader() {
         ${NAV.map(([href, label]) => `<li><a href="${href}" class="${href === here ? 'active' : ''}">${label}</a></li>`).join('')}
       </ul>
       <div class="nav-actions">
-        <a class="btn btn--primary btn--sm nav-book" href="/contact">Book now</a>
+        <a class="btn btn--primary btn--sm nav-book" href="/book">Book now</a>
         <a class="icon-link account-link" href="/account" aria-label="${signedIn() ? 'My account' : 'Sign in'}" title="${signedIn() ? 'My account' : 'Sign in'}">${ICONS.user}${signedIn() ? '<span class="signed-in-dot"></span>' : ''}</a>
         <a class="icon-link cart-link" href="/cart" aria-label="Cart">${ICONS.bag}<span class="cart-count" hidden></span></a>
         <button class="menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">${ICONS.menu}</button>
